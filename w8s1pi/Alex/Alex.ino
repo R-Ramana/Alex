@@ -76,6 +76,16 @@ unsigned long newDist;
 unsigned long deltaTicks;
 unsigned long targetTicks;
 
+/*
+ * PID Variables
+ */
+long error;
+long adjustL = 0;
+long adjustR = 0;
+long Kp = 1500L;
+long Ki = 900L;
+long Kd = 100L;
+
 
 /*
  * 
@@ -227,7 +237,6 @@ void enablePullups()
 // Functions to be called by INT0 and INT1 ISRs.
 void leftISR()
 {
-  leftForwardTicks++;
   if (dir == FORWARD) {
     leftForwardTicks++;
     forwardDist = (unsigned long) ((float) leftForwardTicks / COUNTS_PER_REV_L * WHEEL_CIRC);
@@ -252,7 +261,6 @@ void leftISR()
 
 void rightISR()
 {
-  rightForwardTicks++;
   if (dir == FORWARD) {
     rightForwardTicks++;
 //    forwardDist = (unsigned long) ((float) rightForwardTicks / COU/NTS_PER_REV_R * WHEEL_CIRC);
@@ -287,9 +295,6 @@ void setupEINT()
 // Implement the external interrupt ISRs below.
 // INT0 ISR should call leftISR while INT1 ISR
 // should call rightISR.
-
-
-
 
 // Implement INT0 and INT1 ISRs above.
 ISR(INT0_vect){
@@ -663,10 +668,7 @@ void handlePacket(TPacket *packet)
 }
 
 void loop() {
-
-// Uncomment the code below for Step 2 of Activity 3 in Week 8 Studio 2
-
-// forward(0, 100);
+  // PID code
   if (deltaTicks > 0) 
   {
     if (dir == LEFT)
