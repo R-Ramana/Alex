@@ -492,6 +492,14 @@ void right(float ang, float speed)
 {
   dir = RIGHT;
   int val = pwmVal(speed);
+  
+   if (ang == 0) 
+    deltaTicks = 9999999;
+  else {
+    deltaTicks = computeDeltaTicks(ang);
+  }
+
+  targetTicks = rightReverseTicksTurns + deltaTicks;
 
   // For now we will ignore ang. We will fix this in Week 9.
   // We will also replace this code with bare-metal later.
