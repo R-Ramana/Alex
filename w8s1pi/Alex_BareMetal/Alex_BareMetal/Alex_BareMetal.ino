@@ -323,10 +323,10 @@ void setupSerial()
 {
   // To replace later with bare-metal.
   // Serial.begin(9600);
-  UBRR0L = 103;
+  UBRR0L = 103;    // for 9600 baud rate 
   UBRR0H = 0;
-  UCSR0C = 0b00100110;
-  UCSR0A = 0;
+  UCSR0C = 0b00100110;  // enabled even parity , 1 stop bit,  8 bit character size, lastbit set to 0 for asynchronous
+  UCSR0A = 0; // 
 }
 
 // Start the serial connection. For now we are using
@@ -337,7 +337,10 @@ void startSerial()
 {
   // Empty for now. To be replaced with bare-metal code
   // later on.
-  UCSR0B = 0b10011000;
+  UCSR0B = 0b10011000; // triggers rx vect interrupt when character received
+  //but not when sending character or when data register empty 
+  // enabled usart receiver and transmitter , 8 bit character size, no 9th bit to receive/transmit (checks out w 8 bit char size)
+  // should be 10111000 for interrupt mode
   
 }
 
@@ -357,7 +360,7 @@ int readSerial(char *buffer)
 }
 
 // Write to the serial port. Replaced later with
-// bare-metal code
+// bare-metal code                                      //i think this change to interrupt mode?
 
 void writeSerial(const char *buffer, int len)
 {
@@ -379,17 +382,17 @@ void setupMotors()
    *    A2IN - Pin 6, PD6, OC0A
    *    B1IN - Pin 10, PB2, OC1B
    *    B2In - pIN 11, PB3, OC2A
-   */
+   */    
    DDRD |= ((PIN_5) | (PIN_6));
    DDRB |= ((PIN_10) | (PIN_11));
    TCNT0 = 0;
-   TCCR0A = 0b10000001; 
-   TIMSK0 |= 0b110; // OCIEA = 1 OCIEB = 1
-   OCR0A = 128;
-   OCR0B = 128;
-   TCCR0B = 0b00000011; 
+   TCCR0A = 0b10000001;       // phase correct mode  // why is 1st bit 1 (notsure)
+   TIMSK0 |= 0b110; // OCIEA = 1 OCIEB = 1   //switch on ociea and b 
+   OCR0A = 128;   
+   OCR0B = 128;           
+   TCCR0B = 0b00000011;  //prescalar 64
    prevMillis = millis();
-   sei();
+   sei(); // forgot cli() ?? 
 }
 
 // Start the PWM for Alex's motors.
@@ -397,7 +400,7 @@ void setupMotors()
 // blank.
 void startMotors()
 {
-  PORTB = PIN_10;
+  PORTB = PIN_10;   //seems right?? not sure
   PORTB = PIN_11;
   PORTD = PIN_5;
   PORTD = PIN_6;
@@ -441,7 +444,7 @@ void forward(float dist, float speed)
   // RF = Right forward pin, RR = Right reverse pin
   // This will be replaced later with bare-metal code.
   
-  analogWrite(LF, val);
+  analogWrite(LF, val); //still need to edit this part
   analogWrite(RF, val);
   analogWrite(LR,0);
   analogWrite(RR, 0);
