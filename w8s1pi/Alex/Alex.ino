@@ -418,6 +418,11 @@ void forward(float dist, float speed)
   // LF = Left forward pin, LR = Left reverse pin
   // RF = Right forward pin, RR = Right reverse pin
   // This will be replaced later with bare-metal code.
+  //DDRD |= PIN_5;
+  //DDRB |= PIN_10;
+  // DDRD &= PIN_6;
+  // DDRB &= PIN_11;
+  //OCR0A = val;
   
   analogWrite(LF, val);
   analogWrite(RF, val);
@@ -449,6 +454,11 @@ void reverse(float dist, float speed)
   // LF = Left forward pin, LR = Left reverse pin
   // RF = Right forward pin, RR = Right reverse pin
   // This will be replaced later with bare-metal code.
+  // DDRD |= PIN_6;
+  // DDRB |= PIN_11;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_10;
+  // OCR0A = val;
   analogWrite(LR, val);
   analogWrite(RR, val);
   analogWrite(LF, 0);
@@ -479,6 +489,11 @@ void left(float ang, float speed)
   }
 
   targetTicks = leftReverseTicksTurns + deltaTicks;
+  
+  // DDRD |= PIN_6;
+  // DDRB |= PIN_10;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_11;
   analogWrite(LR, val);
   analogWrite(RF, val);
   analogWrite(LF, 0);
@@ -507,6 +522,12 @@ void right(float ang, float speed)
   // We will also replace this code with bare-metal later.
   // To turn right we reverse the right wheel and move
   // the left wheel forward.
+  
+  // DDRD |= PIN_5;
+  // DDRB |= PIN_11;
+  // DDRD &= PIN_6;
+  // DDRB &= PIN_10;
+  // OCR0A = val;
   analogWrite(RR, val);
   analogWrite(LF, val);
   analogWrite(LR, 0);
@@ -517,6 +538,10 @@ void right(float ang, float speed)
 void stop()
 {
   dir = STOP;
+  // DDRD &= PIN_6; 
+  // DDRB &= PIN_10;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_11;
   analogWrite(LF, 0);
   analogWrite(LR, 0);
   analogWrite(RF, 0);
