@@ -412,7 +412,7 @@ void setupMotors()
    OCR0B = 128;           
    TCCR0B = 0b00000011;  //prescalar 64
    prevMillis = millis();
-   sei(); // forgot cli() ?? 
+  // sei();
 }
 
 // Start the PWM for Alex's motors.
