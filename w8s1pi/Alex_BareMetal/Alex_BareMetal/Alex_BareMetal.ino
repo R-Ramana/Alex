@@ -30,6 +30,8 @@ volatile TDirection dir = STOP;
 //#define COUNTS_PER_REV_R     296
 //#define PI                  3.141592654
 
+#define TURN_FACTOR 3.6 //3.7ish on table// could be affected by grooves calculated around 2.8 but ended up using 3.5 for better turning
+
 // Wheel circumference in cm.
 // We will use this to calculate forward/backward distance traveled 
 // by taking revs * WHEEL_CIRC
@@ -466,8 +468,8 @@ void forward(float dist, float speed)
   
   //DDRD |= PIN_5;
   //DDRB |= PIN_10;
-  // DDRD &= ~PIN_6;
-  // DDRB &= ~PIN_11;
+  // DDRD &= PIN_6;
+  // DDRB &= PIN_11;
   //OCR0A = val;
   
   analogWrite(LF, val); //still need to edit this part
@@ -503,8 +505,8 @@ void reverse(float dist, float speed)
   
   // DDRD |= PIN_6;
   // DDRB |= PIN_11;
-  // DDRD &= ~PIN_5;
-  // DDRB &= ~PIN_10;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_10;
   // OCR0A = val;
   analogWrite(LR, val);
   analogWrite(RR, val);
@@ -516,7 +518,7 @@ void reverse(float dist, float speed)
 unsigned long computeDeltaTicks(float ang)
 {
   unsigned long ticks = (unsigned long) ((ang * AlexCirc * COUNTS_PER_REV) / (360.0 * WHEEL_CIRC));
-  return ticks;
+  return ticks/TURN_FACTOR;;
 }
 
 // Turn Alex left "ang" degrees at speed "speed".
@@ -539,8 +541,8 @@ void left(float ang, float speed)
   
   // DDRD |= PIN_6;
   // DDRB |= PIN_10;
-  // DDRD &= ~PIN_5;
-  // DDRB &= ~PIN_11;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_11;
   //OCR0A = val;
   analogWrite(LR, val);
   analogWrite(RF, val);
@@ -573,8 +575,8 @@ void right(float ang, float speed)
   
   // DDRD |= PIN_5;
   // DDRB |= PIN_11;
-  // DDRD &= ~PIN_6;
-  // DDRB &= ~PIN_10;
+  // DDRD &= PIN_6;
+  // DDRB &= PIN_10;
   // OCR0A = val;
   analogWrite(RR, val);
   analogWrite(LF, val);
@@ -586,10 +588,10 @@ void right(float ang, float speed)
 void stop()
 {
   dir = STOP;
-  // DDRD &= ~PIN_6;
-  // DDRB &= ~PIN_10;
-  // DDRD &= ~PIN_5;
-  // DDRB &= ~PIN_11;
+  // DDRD &= PIN_6;
+  // DDRB &= PIN_10;
+  // DDRD &= PIN_5;
+  // DDRB &= PIN_11;
   analogWrite(LF, 0);
   analogWrite(LR, 0);
   analogWrite(RF, 0);
