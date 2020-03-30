@@ -30,6 +30,8 @@ volatile TDirection dir = STOP;
 #define COUNTS_PER_REV_R     296
 //#define PI                  3.141592654
 
+#define TURN_FACTOR 3.6 //3.7ish on table// could be affected by grooves calculated around 2.8 but ended up using 3.5 for better turning
+
 // Wheel circumference in cm.
 // We will use this to calculate forward/backward distance traveled 
 // by taking revs * WHEEL_CIRC
@@ -457,7 +459,7 @@ void reverse(float dist, float speed)
 unsigned long computeDeltaTicks(float ang)
 {
   unsigned long ticks = (unsigned long) ((ang * AlexCirc * COUNTS_PER_REV) / (360.0 * WHEEL_CIRC));
-  return ticks;
+  return ticks/TURN_FACTOR;
 }
 
 // Turn Alex left "ang" degrees at speed "speed".
