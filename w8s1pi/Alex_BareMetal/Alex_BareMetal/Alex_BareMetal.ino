@@ -53,6 +53,8 @@ float AlexCirc = 0;
 #define PIN_10 (1 << 2)
 #define PIN_11 (1 << 3)
 
+#define UDRIEMASK 0b00100000
+
 /*
  *    Alex's State Variables
  */
@@ -308,8 +310,25 @@ ISR(INT0_vect){
 }
 
 ISR(INT1_vect){
-
  rightISR();
+}
+
+ISR(USART_RX_vect) {
+  dataRecv = UDR0;
+}
+
+ISR(USART_UDRE_vect) {
+  UDR0 = dataSend;
+  UCSR0B &= ~UDRIEMASK;
+}
+
+void sendData(const char data) {
+  dataSend = buttonVal+'0';
+  UCSR0B |= UDRIEMASK;
+}
+
+char recvData() {
+  return dataRecv-'0'; 
 }
 
 /*
@@ -325,7 +344,7 @@ void setupSerial()
   // Serial.begin(9600);
   UBRR0L = 103;    // for 9600 baud rate 
   UBRR0H = 0;
-  UCSR0C = 0b00100110;  // enabled even parity , 1 stop bit,  8 bit character size, lastbit set to 0 for asynchronous
+  UCSR0C = 0b00000110;  // disabled parity , 1 stop bit,  8 bit character size, lastbit set to 0 for asynchronous
   UCSR0A = 0; // 
 }
 
@@ -337,11 +356,10 @@ void startSerial()
 {
   // Empty for now. To be replaced with bare-metal code
   // later on.
-  UCSR0B = 0b10011000; // triggers rx vect interrupt when character received
+  UCSR0B = 0b10111000; // triggers rx vect interrupt when character received
   //but not when sending character or when data register empty 
   // enabled usart receiver and transmitter , 8 bit character size, no 9th bit to receive/transmit (checks out w 8 bit char size)
-  // should be 10111000 for interrupt mode
-  
+  // should be 10111000 for interrupt mode if using buffer else, 10011000  
 }
 
 // Read the serial port. Returns the read character in
@@ -350,13 +368,15 @@ void startSerial()
 
 int readSerial(char *buffer)
 {
+  unsigned char data = UDR0;
+// Will fail silently and data will be lost if recvBuffer is full
+  writeBuffer(&_recvBuffer, data); 
+//   int count=0;
 
-  int count=0;
+//   while(Serial.available())
+//     buffer[count++] = Serial.read();
 
-  while(Serial.available())
-    buffer[count++] = Serial.read();
-
-  return count;
+//   return count;
 }
 
 // Write to the serial port. Replaced later with
