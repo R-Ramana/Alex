@@ -49,6 +49,12 @@ float AlexCirc = 0;
 #define RF                  10  // Right forward pin
 #define RR                  11  // Right reverse pin
 
+
+//PINS
+#define PIN_5 (1 << 5)
+#define PIN_6 (1 << 6)
+#define PIN_10 (1 << 2)
+#define PIN_11 (1 << 3)
 /*
  *    Alex's State Variables
  */
