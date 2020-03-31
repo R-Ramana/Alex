@@ -422,10 +422,10 @@ void setupMotors()
 // blank.
 void startMotors()
 {
-  PORTB = PIN_10;   //seems right?? not sure
-  PORTB = PIN_11;
-  PORTD = PIN_5;
-  PORTD = PIN_6;
+  PORTB |= PIN_10;   //seems right?? not sure
+  PORTB |= PIN_11;
+  PORTD |= PIN_5;
+  PORTD |= PIN_6;
 }
 
 // Convert percentages to PWM values
