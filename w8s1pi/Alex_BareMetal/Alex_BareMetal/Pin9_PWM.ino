@@ -433,14 +433,14 @@ void setupMotors()
    *    B2In - pIN 11, PB3, OC2A
    */
   DDRD |= ((PIN_5) | (PIN_6));
-  DDRB |= ((PIN_10) | (PIN_11));
+  DDRB |= ((PIN_10) | (PIN_9));
 
   TCNT0 = 0;
   TCCR0A = 0b10100001; 
   TCCR0B = 0b00000011;
   TCNT1 = 0;
   TCCR1A = 0b10100001;
-  TCCR0B = 0b00000011;
+  TCCR1B = 0b00000011;
 
 
 }
