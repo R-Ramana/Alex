@@ -104,10 +104,11 @@ unsigned long newDist;
 unsigned long deltaTicks;
 unsigned long targetTicks;
 
+// suggestion: make TBuffer static either "do not destroy variable when done" or "external functions cannot access it"
 TBuffer _recvBuffer;
-initBuffer(_recvBuffer, PACKET_SIZE);
+initBuffer(&_recvBuffer, PACKET_SIZE + 10);
 TBuffer _xmitBuffer;
-initBuffer(_xmitBuffer, PACKET_SIZE);
+initBuffer(&_xmitBuffer, PACKET_SIZE + 10);
 
 /*
  * 
@@ -431,11 +432,12 @@ void setupSerial()
     /*
         9600 bps, 8N1 configuration (9600 baudrate, 8 bits of data, no parity and 1 stop bit)
     */
-    
     // PART ONE: frame format using UCSR0C
+    UBRR0L = 103;
+    UBRR0H = 0;
+    //setBaud(9600);
     UCSR0C = 0b00000110;
     // PART TWO: baud rate
-    setBaud(9600);
     // PART THREE: enable transmission/receipt and interrupts (and size of data. ref: part 1 point 4)
     // is done in startSerial because as soon as transmit / receive bits are 1, serial begins
 
@@ -447,8 +449,8 @@ void setupSerial()
 void setBaud(unsigned long baudRate) {
     unsigned int B;
     B = (unsigned int) round(F_CPU/16*baudRate) - 1;
-    UBRR0H = (unsigned char) B >> 8;
     UBRR0L = B;
+    UBRR0H = (unsigned char) B >> 8;
 }
 
 
@@ -497,7 +499,7 @@ ISR(USART_UDRE_vect) {
     unsigned char data;
     TBufferResult result = readBuffer(&_xmitBuffer, &data);
     if (result == BUFFER_OK)
-        UDRO = data;
+        UDR0 = data;
     else
         if (result == BUFFER_EMPTY)
             UCSR0B &= 0b11011111;
@@ -511,12 +513,12 @@ void writeSerial(const char *buffer, int len)
     TBufferResult result = BUFFER_OK;
     int i;
     for (i = 1; i < len && result == BUFFER_OK; i++)
-        result = writeBuffer(&_xmitBuffer, buffer[1]);
+        result = writeBuffer(&_xmitBuffer, buffer[i]);
   
-    UDRO = buffer[0];
+    UDR0 = buffer[0];
 
     // Enable the UDRE interrupt. The enable is bit 5 of UCSR0B
-    UCSR0B |= 0b0010000;
+    UCSR0B |= 0b00100000;
 }
 
 /*
