@@ -106,9 +106,7 @@ unsigned long targetTicks;
 
 // suggestion: make TBuffer static either "do not destroy variable when done" or "external functions cannot access it"
 TBuffer _recvBuffer;
-initBuffer(&_recvBuffer, PACKET_SIZE + 10);
 TBuffer _xmitBuffer;
-initBuffer(&_xmitBuffer, PACKET_SIZE + 10);
 
 /*
  * 
@@ -825,17 +823,19 @@ void waitForHello()
 }
 
 void setup() {
-  setupPowerSaving();
   AlexDiagonal = sqrt((ALEX_LENGTH * ALEX_LENGTH) + (ALEX_BREADTH * ALEX_BREADTH));
   AlexCirc = PI * AlexDiagonal;
   cli();
   setupEINT();
   setupSerial();
+  initBuffer(&_recvBuffer, PACKET_SIZE);
+  initBuffer(&_xmitBuffer, PACKET_SIZE);
   startSerial();
   setupMotors();
   startMotors();
   enablePullups();
   initializeState();
+  setupPowerSaving();
   sei();
 }
 
