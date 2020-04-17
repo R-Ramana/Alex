@@ -134,27 +134,25 @@ void setupPowerSaving()
   // Turn off the Watchdog Timer   
   WDT_off();
   // Modify PRR to shut down TWI 
-  PRR &= ~PRR_TWI_MASK;
+  PRR |= PRR_TWI_MASK;
   // Modify PRR to shut down SPI 
-  PRR &= ~PRR_SPI_MASK;
+  PRR |= PRR_SPI_MASK;
   // Modify ADCSRA to disable ADC,    
   ADCSRA &= ~ADCSRA_ADC_MASK;
   // then modify PRR to shut down ADC  
-  PRR &= ~PRR_ADC_MASK;
+  PRR |= PRR_ADC_MASK;
   // Set the SMCR to choose the IDLE sleep mode   
   SMCR |= SMCR_IDLE_MODE_MASK;
   // Do not set the Sleep Enable (SE) bit yet 
  
-  // Set Port B Pin 5 as output pin, then write a logic LOW   
-  DDRB &= ~PIN5;
-  // to it so that the LED tied to Arduino's Pin 13 is OFF. 
+  // Set Port B Pin 5 as output pin, then write a logic LOW to it so that the LED tied to Arduino's Pin 13 is OFF.  
+  DDRB |= PIN5;
+  PORTB &= ~PIN5;
   }
 
  void putArduinoToIdle() {   
   // Modify PRR to shut down TIMER 0, 1, and 2
-  PRR &= ~PRR_TIMER2_MASK;
-  PRR &= ~PRR_TIMER0_MASK;
-  PRR &= ~PRR_TIMER1_MASK;    
+  PRR |= (PRR_TIMER2_MASK | PRR_TIMER0_MASK | PRR_TIMER1_MASK);    
   // Modify SE bit in SMCR to enable (i.e., allow) sleep  
   SMCR |= SMCR_SLEEP_ENABLE_MASK;    
   // The following function puts ATmega328P’s MCU into sleep;   
@@ -163,9 +161,7 @@ void setupPowerSaving()
   // Modify SE bit in SMCR to disable (i.e., disallow) sleep 
   SMCR &= ~SMCR_SLEEP_ENABLE_MASK;
   // Modify PRR to power up TIMER 0, 1, and 2
-  PRR |= PRR_TIMER2_MASK;
-  PRR |= PRR_TIMER0_MASK;
-  PRR |= PRR_TIMER1_MASK;   
+  PRR &= ~(PRR_TIMER2_MASK | PRR_TIMER0_MASK | PRR_TIMER1_MASK)   
   } 
  
 TResult readPacket(TPacket *packet)
@@ -866,7 +862,6 @@ void handlePacket(TPacket *packet)
 }
 
 void loop() {
-  putArduinoToIdle();
   if (deltaTicks > 0) 
   {
     if (dir == LEFT)
@@ -922,6 +917,8 @@ void loop() {
   
   if(result == PACKET_OK)
     handlePacket(&recvPacket);
+  else if (result == PACKET_INCOMPLETE && dir == STOP)
+    putArduinoToIdle();
   else
     if(result == PACKET_BAD)
     {
