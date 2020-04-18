@@ -159,7 +159,7 @@ void setupPowerSaving()
   // Modify SE bit in SMCR to disable (i.e., disallow) sleep 
   SMCR &= ~SMCR_SLEEP_ENABLE_MASK;
   // Modify PRR to power up TIMER 0, 1, and 2
-  PRR &= ~(PRR_TIMER2_MASK | PRR_TIMER0_MASK | PRR_TIMER1_MASK)   
+  PRR &= ~(PRR_TIMER2_MASK | PRR_TIMER0_MASK | PRR_TIMER1_MASK);
   } 
  
 TResult readPacket(TPacket *packet)
