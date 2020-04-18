@@ -3,6 +3,7 @@
 #include <math.h>
 #include "packet.h"
 #include "constants.h"
+#include "buffer.h"
 #include <avr/sleep.h> 
 
 // include buffer files
@@ -506,7 +507,7 @@ void writeSerial(const char *buffer, int len)
 {
     TBufferResult result = BUFFER_OK;
     int i;
-    for (i = 1; i < len && result == BUFFER_OK; i++)
+    for (i = 1; i < PACKET_SIZE && result == BUFFER_OK; i++)
         result = writeBuffer(&_xmitBuffer, buffer[i]);
   
     UDR0 = buffer[0];
