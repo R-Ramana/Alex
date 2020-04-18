@@ -495,9 +495,8 @@ ISR(USART_UDRE_vect) {
     TBufferResult result = readBuffer(&_xmitBuffer, &data);
     if (result == BUFFER_OK)
         UDR0 = data;
-    else
-        if (result == BUFFER_EMPTY)
-            UCSR0B &= 0b11011111;
+    else if (result == BUFFER_EMPTY)
+        UCSR0B &= 0b11011111;
 }
 
 // Write to the serial port. Replaced later with
