@@ -1,7 +1,8 @@
 # Alex
-A Robotic vehicle with search and rescue functionality.
+Alex, a search and rescue robot has the potential to carry out the following:
+- [x] Map the environment
+- [x] Transmit relevant data of its current position to the user
+- [x] Avoid obstacles and quickly traverse in and out of rooms
+- [x] Be energy efficient in order to last a longer duration
 
-# Project Dates and Milestones
-- [x] Week 8 (13 March 2020) - Design Report Submission (10% of CA) 
-- [ ] Week 12 Studio 1 (6 April 2020) - Mock Evaluation and Final Report Draft Submission
-- [ ] Week 13 (13 April 2020) - Demo + Oral Presentation
+A comprehensive report on the functionalities of Alex can be found in the 030301-report.pdf 
