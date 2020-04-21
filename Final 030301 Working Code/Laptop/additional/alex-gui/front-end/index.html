@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex GUI</title>
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <style>
+        fieldset {
+        border: 5px solid black;
+        }
+        .container {
+        text-align: center;
+        font-family: sans-serif;
+        display: flex;
+        }
+
+        .half-w {
+        width: 30%;
+        }
+
+        .input {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        margin: 10px auto;
+        }
+
+        input {
+        outline: 5px solid black;
+        margin: 10px;
+        }
+
+        .buttons {
+        margin: 0 auto;
+        }
+
+        .buttons-l-r {
+        display: flex;
+        flex-direction: row;
+        }
+
+        .button {
+        background: black;
+        color: white;
+        width: 100px;
+        cursor: pointer;
+        }
+
+        .button-up, .button-down {
+        width: 200px;
+        margin: 5px 0 5px 0;
+        padding-top: 7px;
+        }
+
+        .button-down {
+        transform: rotate(180deg);
+        }
+
+        .button-container {
+        width: 100%;
+        display: flex;
+        }
+
+        legend {
+        padding: 0 10px;
+        }
+
+        .distance-values {
+        width: 30vw;
+        margin-left: 10px;
+        }
+
+        .value {
+        font-weight: bold;
+        text-align: left;
+        margin: 10px;
+        }
+
+        .value-value {
+        color: grey
+        }
+
+        .d-values {
+        display: flex;
+        }
+
+        .motor-values {
+        margin-left: 10px;
+        width: 30vw;
+        margin-top: 50px;
+        }
+    </style>
+    <div class="container">
+        <fieldset class="half-w">
+            <legend>Movment Controls</legend>
+            <div class="input">
+                <label for="distance">Distance in cm</label>
+                <input id="distance" placeholder="User Input"></input>
+            </div>
+            <div class="input">
+                <label for="distance">Angle in degrees</label>
+                <input id="distance" placeholder="User Input"></input>
+            </div>
+            <div class="button-container">
+                <div class="buttons">
+                    <div class="button button-up">^</div>
+                    <div class="buttons-l-r">
+                        <div class="button button-left">
+                            <</div>
+                                <div class="button button-right">></div>
+                        </div>
+                        <div class="button button-down">^</div>
+                    </div>
+                </div>
+        </fieldset>
+        <div>
+            <fieldset class="distance-values">
+                <legend>Distance Values</legend>
+                <div class="d-values">
+                    <div class="value">
+                        <div class="value-title">Distance from next obstacle:</div>
+                        <div class="value-value">#######</div>
+                    </div>
+                    <div class="value">
+                        <div class="value-title">Distance covered:</div>
+                        <div class="value-value">#######</div>
+                    </div>
+                </div>
+            </fieldset>
+    
+            <fieldset class="motor-values">
+                <legend>Motor Values</legend>
+                <div class="d-values">
+                    <div class="value">
+                        <div class="value-title">Left Motor Speed:</div>
+                        <div class="value-value">#######</div>
+                    </div>
+                    <div class="value">
+                        <div class="value-title">Right Motor Speed:</div>
+                        <div class="value-value">#######</div>
+                    </div>
+                </div>
+            </fieldset>
+            <div>
+            </div>
+</body>
+</html>
